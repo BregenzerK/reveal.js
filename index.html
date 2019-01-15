@@ -1,49 +1,173 @@
 <!doctype html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+    <title>reveal.js</title>
 
-		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/black.css">
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/sky.css">
 
-		<!-- Theme used for syntax highlighting of code -->
-		<link rel="stylesheet" href="lib/css/zenburn.css">
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
 
-		<!-- Printing and PDF exports -->
-		<script>
-			var link = document.createElement( 'link' );
-			link.rel = 'stylesheet';
-			link.type = 'text/css';
-			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
-			document.getElementsByTagName( 'head' )[0].appendChild( link );
-		</script>
-	</head>
-	<body>
-		<div class="reveal">
-			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
-			</div>
-		</div>
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+<body>
+<div class="reveal">
+    <div class="slides">
+        <section data-markdown>
+            # Web components
+            ## The future of the web
+        </section>
+        <section data-markdown>
+            ### About me
+            - Software developer at Lime Technologies
+            - Grew up in southern Germany and moved to Sweden last summer
+            - ...
+        </section>
+        <section data-markdown>
+            ### About Lime Technologies
+            - ...
+        </section>
+        <section data-markdown>
+            ### web components
+            - What's the problem?
+            - How do web components solve it?
+                - Custom Elements
+                - Shadow DOM
+            - How can frameworks support me?
+        </section>
+        <section>
+            <section data-markdown>
+                ### What's the problem
+                - undescriptive markup
+                - poor separation of concerns
 
-		<script src="lib/js/head.min.js"></script>
-		<script src="js/reveal.js"></script>
+                Note:
+                - huge hierarchies of html elements, that structure doesn't have to map to its content
+                - grouped by html/ css/ js instead of feature
+                - --> bad readability & hard to maintain
+                - let's look at an example. What do you need to get this?
+            </section>
+            <section data-background-image="asserts/lth-scroll-to-top.gif"></section>
+            <section data-markdown>
+                <textarea data-template>
+                    <pre>
+                        <code class="html">
+                        <a title="Click here to get back to top" id="scroll_to_top" style="opacity: 1; display: inline; outline: none;"></a>
+                        </code>
+                        <code class="css">
+                            @media (min-width: 641px)
+                            #scroll_to_top {
+                                display: none;
+                                position: fixed;
+                                cursor: pointer;
+                                bottom: 20px;
+                                right: 20px;
+                                background: url(/profiles/factory/themes/lu_theme/img/responsive-scroll-to-top.png) no-repeat;
+                                background-size: 67px;
+                                height: 67px;
+                                width: 67px;
+                                z-index: 900;
+                        }
+                        </code>
+                    </pre>
+                </textarea>
+            </section>
+            <section data-markdown>
+                <textarea data-template>
+                    <pre>
+                        <code class="javascript">
+                            function showScroll() {
+                              var scroll = $(window).scrollTop();
+                              var height = '';
+                              if (width <= 640) {
+                                // RESPONSIVE BUTTON
+                                height = $(window).height();
+                                if (scroll > height) {
+                                  $('#scroll_to_top').show();
+                                }
+                                else if (scroll <= height) {
+                                  $('#scroll_to_top').hide();
+                                }
 
-		<script>
-			// More info about config & dependencies:
-			// - https://github.com/hakimel/reveal.js#configuration
-			// - https://github.com/hakimel/reveal.js#dependencies
-			Reveal.initialize({
-				dependencies: [
-					{ src: 'plugin/markdown/marked.js' },
-					{ src: 'plugin/markdown/markdown.js' },
-					{ src: 'plugin/notes/notes.js', async: true },
-					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
-				]
-			});
-		</script>
-	</body>
+                              }
+                              else if (width >= 641) {
+                                // DESKTOP BUTTON
+                                height = 200;
+                                if (scroll > height && $('#scroll_to_top').css('display') === 'none') {
+                                  $('#scroll_to_top').css('opacity', 0)
+                                  .slideDown('slow')
+                                  .animate({opacity: 1}, {queue: false, duration: 'slow'}
+                                  );
+                                }
+                                else if (scroll <= height && $('#scroll_to_top').css('display') === 'block') {
+                                  $('#scroll_to_top').css('opacity', 1)
+                                  .slideUp('slow')
+                                  .animate({opacity: 0}, {queue: false, duration: 'slow'}
+                                  );
+                                }
+                              }
+                            }
+                        </code>
+                    </pre>
+                    Note:
+                    not complete and spread over at least 3 different places
+                </textarea>
+            </section>
+            <section data-markdown>
+                <textarea data-template>
+                    <pre>
+                        <code class="html">
+                            <lth-scroll-to-top></lth-scroll-to-top>
+                        </code>
+                    </pre>
+                    Note:
+                    - how nice if we could have something like this instead
+                    - all the code you saw is still needed but hidden behind one html element
+                    - --> adding this functionality to an application is only a small change
+                    - --> easy reusable
+                </textarea>
+            </section>
+        </section>
+        <section>
+
+        </section>
+
+    </div>
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+
+<script>
+    // More info about config & dependencies:
+    // - https://github.com/hakimel/reveal.js#configuration
+    // - https://github.com/hakimel/reveal.js#dependencies
+    Reveal.initialize({
+        dependencies: [
+            {src: 'plugin/markdown/marked.js'},
+            {src: 'plugin/markdown/markdown.js'},
+            {src: 'plugin/notes/notes.js', async: true},
+            {
+                src: 'plugin/highlight/highlight.js', async: true, callback: function () {
+                    hljs.initHighlightingOnLoad();
+                }
+            }
+        ],
+        markdown: {
+            smartypants: true
+        }
+    });
+</script>
+</body>
 </html>

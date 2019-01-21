@@ -99,7 +99,6 @@
                                 else if (scroll <= height) {
                                   $('#scroll_to_top').hide();
                                 }
-
                               }
                               else if (width >= 641) {
                                 // DESKTOP BUTTON
@@ -216,7 +215,7 @@
         <section>
             <section data-markdown>
                 ### Shadow DOM
-                - goal: create a web component that always behaviors and looks the same
+                - goal: create a web component that always behaves and looks the same
                 - --> no side effects from the outside
             </section>
             <section data-markdown>
@@ -294,6 +293,57 @@
                 </aside>
             </section>
         </section>
+        <section>
+            <section data-markdown>
+                ### Libraries support
+                - there's a lot similar code, when implementing different web components
+                --> libraries can help you to reduce that
+                - libraries examples: Stencil, Polymer
+                - [Lime elements](https://lundalogik.github.io/lime-elements/) with Stencil
+            </section>
+            <section data-markdown>
+                <textarea data-template>
+                    <pre>
+                        <code class="javascript">
+                            import {Component, Prop} from '@stencil/core';
+                            @Component({
+                                 // window.customElements.define(...)
+                                tag: 'lth-stencil-hello-world',
+                                // attachRoot(..)
+                                shadow: true
+                            })
+                            export class HelloWorldStencilCustomElement {
+                                //  this.name = this.name || 'World';
+                                @Prop() name: string ='World';
+                                // document.createElement('span');
+                                render() {
+                                    return (<span>   Hello {this.name}</span>);
+                                }
+                            }
+                        </code>
+
+                    </pre>
+                </textarea>
+            </section>
+            <section data-markdown>
+                <textarea data-template>
+                    <pre>
+                        <code class="html">
+                            <lth-stencil-hello-world></lth-stencil-hello-world> <br>
+                            <lth-stencil-hello-world name="LTH Students">
+                            </lth-stencil-hello-world>
+                        </code>
+                    </pre>
+                </textarea>
+            </section>
+            <section>
+                <lth-stencil-hello-world></lth-stencil-hello-world> <br>
+                <lth-stencil-hello-world name="LTH Students"></lth-stencil-hello-world>
+            </section>
+        </section>
+        <section data-markdown>
+            # Thank you for your attention!
+        </section>
     </div>
 </div>
 
@@ -321,8 +371,9 @@
     });
 </script>
 <!-- Importing Web Components Polyfill -->
-<script src="https://polygit.org/components/webcomponentsjs/webcomponents-loader.js"></script>
+<!--<script src="https://polygit.org/components/webcomponentsjs/webcomponents-loader.js"></script>-->
 <script src="js/hello-world-custom-element.js"></script>
 <script src="js/hello-world-shadow-custom-element.js"></script>
+<script src="www/build/app.js"></script>
 </body>
 </html>

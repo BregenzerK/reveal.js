@@ -10,7 +10,8 @@ class HelloWorldCustomElement extends HTMLElement{
     }
 
 
-    connectedCallback() {
+    constructor() {
+        super();
         this._content = document.createElement('span');
         this.name = this.name || 'World';
         this._content.innerText = 'Hello ' + this.name;

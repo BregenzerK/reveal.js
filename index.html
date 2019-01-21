@@ -172,7 +172,8 @@
                                 set name(name) {
                                     this.setAttribute('name', name);
                                 }
-                                connectedCallback() {
+                                constructor() {
+                                    super();
                                     this._content = document.createElement('span');
                                     this.name = this.name || 'World';
                                     this._content.innerText = 'Hello ' + this.name;
@@ -212,7 +213,87 @@
                 </aside>
             </section>
         </section>
-
+        <section>
+            <section data-markdown>
+                ### Shadow DOM
+                - goal: create a web component that always behaviors and looks the same
+                - --> no side effects from the outside
+            </section>
+            <section data-markdown>
+                <textarea data-template>
+                    <pre>
+                        <code class="html">
+                            <style>
+                                .red-text span {
+                                    color: red;
+                                }
+                            </style>
+                            <div class="red-text">
+                                <lth-hello-world name="red text"/>
+                            </div>
+                        </code>
+                    </pre>
+                </textarea>
+            </section>
+            <section>
+                <style>
+                    .red-text span {
+                        color: red;
+                    }
+                </style>
+                <div class="red-text">
+                    <lth-hello-world name="red text"/>
+                </div>
+            </section>
+        <section data-markdown>
+                <textarea data-template>
+                    <pre>
+                        <code class="javascript">
+                            class HelloWorldShadowCustomElement extends
+                            HelloWorldCustomElement{
+                                constructor() {
+                                    super();
+                                    this.attachShadow({mode: 'open'});
+                                    this.shadowRoot.appendChild(this._content);
+                                }
+                            }
+                            // Registers a custom element
+                            window.customElements.define(
+                                'lth-shadow-dom-hello-world',
+                            HelloWorldShadowCustomElement
+                            );
+                        </code>
+                        <code class="html">
+                            <style>.red-text span {color: red;}</style>
+                            <div class="red-text">
+                                <lth-shadow-dom-hello-world name="black text"/>
+                            </div>
+                        </code>
+                    </pre>
+                    Note:
+                    - super: extends first example --> super creates span & initializes name attribute
+                    - attachShadow: creates shadow DOM for this HTML element
+                    - mode open: you can access/ change the Shadow DOM
+                    - select custom element in dev tools and run `$0` and `$0.shadowRoot`
+                    - append content to shadow DOM instead the parent
+                </textarea>
+            </section>
+            <section>
+                <div class="red-text">
+                    <lth-shadow-dom-hello-world name="black text"/>
+                </div>
+            </section>
+            <section>
+                <video controls></video> <br>
+                <input type="date">
+                <aside class="notes">
+                    - HTML elements like video and date-picker are using Shadow DOM natively
+                    - --> show generated HTML in dev tools
+                    - mode is not open --> can't change styles or behavior from the outside
+                    - select video element in dev tools and run `$0` and `$0.shadowRoot`
+                </aside>
+            </section>
+        </section>
     </div>
 </div>
 
@@ -242,5 +323,6 @@
 <!-- Importing Web Components Polyfill -->
 <script src="https://polygit.org/components/webcomponentsjs/webcomponents-loader.js"></script>
 <script src="js/hello-world-custom-element.js"></script>
+<script src="js/hello-world-shadow-custom-element.js"></script>
 </body>
 </html>

@@ -139,8 +139,78 @@
                 </textarea>
             </section>
         </section>
-        <section>
+        <section data-markdown>
+            ### Definition
+            > Web components are a set of **web platform APIs** that allow you to create new **custom,
+            > reusable, encapsulated** HTML tags […] letting web developers easily extend HTML with
+            > new elements with **encapsulated styling and custom behavior**
+            [source](https://www.webcomponents.org/introduction)
 
+            Note:
+            - web platform API (application programming interface): provide a defined set of functionality to create Custom Elements,
+            add Shadow DOMs, enable imports and define templates
+            - --> possibility to implement that scroll-to-top tag!
+            - today's focus: Custom Elements and Shadow DOM
+        </section>
+        <section>
+            <section data-markdown>
+                ### custom elements
+                - create your own elements, that act like regular HTML elements ​
+                - configurable by attribute
+                - can include its own logic and styles
+
+                <`lth-scroll-to-top position="bottom-right"`/>
+            </section>
+            <section data-markdown>
+                <textarea data-template>
+                    <pre>
+                        <code class="javascript">
+                            class HelloWorldCustomElement extends HTMLElement {
+                                get name() {
+                                    return this.getAttribute('name');
+                                }
+                                set name(name) {
+                                    this.setAttribute('name', name);
+                                }
+                                connectedCallback() {
+                                    this._content = document.createElement('span');
+                                    this.name = this.name || 'World';
+                                    this._content.innerText = 'Hello ' + this.name;
+                                    this.appendChild(this._content);
+                                }
+                            }
+                            // Registers custom element
+                            window.customElements.define(
+                                'lth-hello-world',
+                                HelloWorldCustomElement
+                            );
+                        </code>
+                    </pre>
+                    Note:
+                    - extends HTMLElement
+                    - getter & setter for attribute
+                    - create span, set text & append it
+                    - custom element registration
+                </textarea>
+            </section>
+            <section data-markdown>
+                <textarea data-template>
+                    <pre>
+                        <code class="html">
+                            <lth-hello-world></lth-hello-world> <br>
+                            <lth-hello-world name="LTH Students"></lth-hello-world>
+                        </code>
+                    </pre>
+                </textarea>
+            </section>
+
+            <section>
+                <lth-hello-world></lth-hello-world> <br>
+                <lth-hello-world name="LTH Students"></lth-hello-world>
+                <aside class="notes">
+                    Show elements in developer tools --> span got appended
+                </aside>
+            </section>
         </section>
 
     </div>
@@ -169,5 +239,8 @@
         }
     });
 </script>
+<!-- Importing Web Components Polyfill -->
+<script src="https://polygit.org/components/webcomponentsjs/webcomponents-loader.js"></script>
+<script src="js/hello-world-custom-element.js"></script>
 </body>
 </html>

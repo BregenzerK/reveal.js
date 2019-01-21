@@ -32,7 +32,7 @@
             ### About me
             - Software developer at Lime Technologies
             - Grew up in southern Germany and moved to Sweden last summer
-            - ...
+            - ~ 4 years experiences with web development (javascript, html, css, java)
         </section>
         <section data-markdown>
             ### About Lime Technologies
@@ -163,7 +163,7 @@
             <section data-markdown>
                 <textarea data-template>
                     <pre>
-                        <code class="javascript">
+                        <code class="javascript" data-trim>
                             class HelloWorldCustomElement extends HTMLElement {
                                 get name() {
                                     return this.getAttribute('name');
@@ -247,7 +247,7 @@
         <section data-markdown>
                 <textarea data-template>
                     <pre>
-                        <code class="javascript">
+                        <code class="javascript" data-trim>
                             class HelloWorldShadowCustomElement extends
                             HelloWorldCustomElement{
                                 constructor() {
@@ -304,7 +304,7 @@
             <section data-markdown>
                 <textarea data-template>
                     <pre>
-                        <code class="javascript">
+                        <code class="javascript" data-trim>
                             import {Component, Prop} from '@stencil/core';
                             @Component({
                                  // window.customElements.define(...)
@@ -365,9 +365,9 @@
                 }
             }
         ],
-        markdown: {
-            smartypants: true
-        }
+        // markdown: {
+        //     smartypants: true
+        // }
     });
 </script>
 <!-- Importing Web Components Polyfill -->

@@ -1,49 +1,201 @@
 <!doctype html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+    <title>Hack your future - JS3</title>
 
-		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/black.css">
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/sky.css">
 
-		<!-- Theme used for syntax highlighting of code -->
-		<link rel="stylesheet" href="lib/css/zenburn.css">
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
 
-		<!-- Printing and PDF exports -->
-		<script>
-			var link = document.createElement( 'link' );
-			link.rel = 'stylesheet';
-			link.type = 'text/css';
-			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
-			document.getElementsByTagName( 'head' )[0].appendChild( link );
-		</script>
-	</head>
-	<body>
-		<div class="reveal">
-			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
-			</div>
-		</div>
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+<body>
+<div class="reveal">
+    <div class="slides">
+        <section data-markdown>
+            # Event Loop & Promises
+        </section>
+        <section>
+            <section data-markdown>### Sync vs. Async</section>
+            <section data-markdown>
+                ### Sync actions
+                something that's done immediately without dependencies to other systems
+            </section>
+            <section data-markdown>
+                ### Async actions
+                - something that has a dependency to something else
+                - impossible to guaranty a certain result in a certain time
+            </section>
+            <section data-markdown>
+                ### Async out in the real world
+                you want to cook homemade pizza, but you're missing cheese, so you send your kid/ spouse to the store
+            </section>
+            <section data-markdown>
+                ### Blocking vs. non-blocking
+                - blocking: you wait for the cheese before you start cooking
+                - non-blocking: you prepare everything up-front
+            </section>
+            <section>
+                But what if the store ran out of cheese?
+            </section>
+        </section>
+        <section>
+            <section data-markdown>
+                ### Event Loop
+            </section>
+            <section data-markdown>
+                ### Call stack
+                - only Javascript core features are handled purely by the call stack
+                - always sync calls (one after another)
+                - [Simulation](http://latentflip.com/loupe/?code=Y29uc29sZS5sb2coJ2JlZm9yZScpOwpbMSwyLDMsNCw1XS5mb3JFYWNoKGZ1bmN0aW9uKG51bWJlcil7Y29uc29sZS5sb2cobnVtYmVyKX0pOwpjb25zb2xlLmxvZygnYWZ0ZXInKTs%3D!!!PGJ1dHRvbj5DbGljayBtZSE8L2J1dHRvbj4%3D)
+            </section>
+            <section data-markdown>
+                ### Web APIs
+                - as soon as javascript provided Web APIs are used calls are queued
+                - the event loop picks up calls from the queue when the call stack is empty
+                - [Simulation](http://latentflip.com/loupe/)
+            </section>
+            <section>experiment with code from the last weeks in the simulation tool</section>
+        </section>
+        <section>
+            <section data-markdown>### Promises</section>
+            <section data-markdown>
+                ### Involve another party
+                - ``new Promise(resolve, reject)``
+                - resolve: function that returns your result (e.g. cheese)
+                - reject: function that returns error messages
+            </section>
+            <section data-markdown>
+                <textarea data-template>
+                    <pre>
+                        <code class="javascript" data-trim>
+                            function fetchJSON(url) {
+                              return new Promise((resolve, reject) => {
+                                const xhr = new XMLHttpRequest();
+                                xhr.open('GET', url);
+                                xhr.responseType = 'json';
+                                xhr.onreadystatechange = () => {
+                                  if (xhr.readyState === 4) {
+                                    if (xhr.status < 400) {
+                                      resolve(xhr.response);
+                                    } else {
+                                      reject(new Error(xhr.statusText));
+                                    }
+                                  }
+                                };
+                                xhr.send();
+                              });
+                            }
+                        </code>
+                    </pre>
+                </textarea>
+            </section>
+            <section data-markdown>
+                ### React to their behavior
+                - ``.then(data, err)``
+                - ``.catch(err)``
+            </section>
+            <section data-markdown>
+                <textarea data-template>
+                    <pre>
+                        <code class="javascript" data-trim>
+                        somePromise
+                          .then(data => {
+                            // ...
+                          })
+                          .catch(err => {
+                            // ...
+                          });
 
-		<script src="lib/js/head.min.js"></script>
-		<script src="js/reveal.js"></script>
+                         somePromise
+                            .then((data, err) => {
+                                // ...
+                            }
+                        </code>
+                    </pre>
+                </textarea>
+            </section>
+            <section>Solve conference challenge by fetching participants from github</section>
+        </section>
+        <section>
+            <section data-markdown>
+                ### Promises advanced
+                - chaining promises
+                - combining several results
+            </section>
+            <section data-markdown>
+                <textarea data-template>
+                    <pre>
+                        <code class="javascript" data-trim>
+                            function fetchAndRender(getParentUrl) {
+                              fetchJSON(getParentUrl)
+                                .then(parents => {
+                                  renderPersons(parents);
+                                  return fetchJSON(parents.getChildrenUrl);
+                                })
+                                .then(children => {
+                                  renderPersons(children);
+                                })
+                                .catch(err => {
+                                  renderError(err);
+                                });
+                            }
+                        </code>
+                    </pre>
+                </textarea>
+            </section>
+            <section data-markdown>
+                <textarea data-template>
+                    <pre>
+                        <code class="javascript" data-trim>
+                            const promise1 = Promise.resolve(3);
+                            const promise2 = 42;
+                            const promise3 = new Promise(function(resolve, reject) {
+                              setTimeout(resolve, 100, 'foo');
+                            });
 
-		<script>
-			// More info about config & dependencies:
-			// - https://github.com/hakimel/reveal.js#configuration
-			// - https://github.com/hakimel/reveal.js#dependencies
-			Reveal.initialize({
-				dependencies: [
-					{ src: 'plugin/markdown/marked.js' },
-					{ src: 'plugin/markdown/markdown.js' },
-					{ src: 'plugin/notes/notes.js', async: true },
-					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
-				]
-			});
-		</script>
-	</body>
+                            Promise.all([promise1, promise2, promise3]).then(function(values) {
+                              console.log(values);
+                            });
+                        </code>
+                    </pre>
+                </textarea>
+            </section>
+        </section>
+    </div>
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+
+<script>
+    // More info about config & dependencies:
+    // - https://github.com/hakimel/reveal.js#configuration
+    // - https://github.com/hakimel/reveal.js#dependencies
+    Reveal.initialize({
+        dependencies: [
+            {src: 'plugin/markdown/marked.js'},
+            {src: 'plugin/markdown/markdown.js'},
+            {src: 'plugin/notes/notes.js', async: true},
+            {
+                src: 'plugin/highlight/highlight.js', async: true, callback: function () {
+                    hljs.initHighlightingOnLoad();
+                }
+            }
+        ]
+    });
+</script>
+</body>
 </html>

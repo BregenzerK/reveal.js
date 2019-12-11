@@ -1,0 +1,6 @@
+.reveal section img.lime-image {
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    max-height: 35rem;
+}

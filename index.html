@@ -4,10 +4,11 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+		<title>Limetype API</title>
 
 		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/black.css">
+		<link rel="stylesheet" href="css/lime.css">
+		<link rel="stylesheet" href="css/theme/sky.css">
 
 		<!-- Theme used for syntax highlighting of code -->
 		<link rel="stylesheet" href="lib/css/zenburn.css">
@@ -24,8 +25,203 @@
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
+				<section data-markdown>
+                    ## interactive API docs with Swagger
+                </section>
+                <section data-markdown>
+                    ### About me
+                    - Katja Bregenzer
+                    - Software developer at Lime Technologies
+                    - Grew up in southern Germany and moved to Sweden in 2018
+                    - 4+ years experiences with web development (javascript, html, css, python, java)
+                </section>
+                <section>
+                    <section data-markdown>
+                        ### About Lime Technologies
+                        - nearly 270 co-workers, over 60 000 users and 25 years experience in the CRM industry
+                        - one of the leading CRM providers in the Nordic's
+                        - offices in Lund, Stockholm, Gothenburg, Helsinki, Copenhagen and Oslo
+
+                        Note:
+                        - do you know the lime shooters? we are NOT those
+                    </section>
+                    <section data-markdown>
+                        ### Nordic Trainee Program
+                        - 1 year program with a mentor on your side
+                        - kickoff with 4 weeks of education in Lund
+                        - roles: developer, account manager, application consultant, technical project manager
+                        - starting in January and August
+
+                        Note:
+                        - kickoff includes all new trainee, with a lot of extra activities and FUN
+                        - currently open application process for August '20 program
+                        - developer trainees just in the swedish offices
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <img class="lime-image" src="images/Lime_with_a_twist.png"/>
+                    </section>
+                    <section data-markdown>
+                        ### Why CRM?
+                        - connecting the dots: who was in contact with whom
+                        about what
+                        - enable the best possible customer support
+                        - support for recurring workflows
+
+                        Note:
+                        - one system as source of truth
+                        - specific requirements differ heavily between
+                        industries/ companies
+                        - -> what degree of configuration/ customisation do you want to offer?
+                    </section>
+                    <section data-markdown>
+                        ### Lime CRM
+                        - configurations & plugins
+                        - **custom database structures changeable at runtime**
+
+                        --> how can you get the current database structure?
+                    </section>
+                </section>
+                <section>
+                    <section data-markdown>
+                        ### Limetype API
+                    </section>
+                    <section data-markdown>
+                        ### Limetypes
+                        - custom database tables
+                            - custom name
+                            - custom columns
+                        - labels to connect a table to known entities/ concepts
+                        - system columns as common factor
+
+                        Note:
+                        - names might be different but the same concepts apply
+                        - e.g. person belongs to a company, users're dealing with companies in projects
+                    </section>
+                    <section data-markdown>
+                        <textarea data-template>
+                            <pre>
+                                <code class="json">
+                                {
+                                    "name": "university",
+                                    "localname": {
+                                        "singular": "University",
+                                        "plural": "Universities"
+                                    },
+                                    "sort_order": 3,
+                                    "label": "company",
+                                    "_links": {}
+                                }
+                                </code>
+                            </pre>
+                        </textarea>
+                    </section>
+                    <section data-markdown>
+                        ### Endpoints
+                        - `api/v1/limetype/`
+                        - `api/v1/limetype/university`
+                        - `api/v1/limetype/university/?embed=properties`
+
+                        Note:
+                        - open in browser
+                    </section>
+                </section>
+                <section>
+                    <section data-markdown>
+                        ### Swagger ui
+                        > Swagger UI allows anyone [...] to **visualize and interact with
+                        > the API’s resources** without having any of the implementation
+                        > logic in place. It’s automatically generated from your **OpenAPI
+                        > Specification**, with the visual documentation [...].
+
+                        [Swagger UI](https://swagger.io/tools/swagger-ui/)
+                    </section>
+                    <section data-markdown>
+                     ### OpenApi Specification
+                        - specification to describe a REST API
+                            - available endpoints
+                            - operation parameters
+                            - authentication
+                            - Contact information, license, terms of use...
+                        - in YAML or JSON
+                    </section>
+                    <section data-markdown>
+                        ### Limetype API with Swagger UI
+                        - dynamic endpoints in OpenAPI specification
+                        - use [Jinja template](https://jinja.palletsprojects.com/en/2.10.x/)
+                        for serverside rendered yaml specification
+                    </section>
+                    <section data-markdown>
+                        <textarea data-template>
+                            <pre>
+                                <code class="yaml">
+                                    {% for lt in limetypes %}
+                                      /{{ lt.name }}/:
+                                        get:
+                                          summary: Retrieve the {{ lt.localname.singular | lower }} schema.
+                                          description: Retrieves the schema for the the {{ lt.localname.singular | lower }} limetype.
+                                          tags:
+                                            - Specific limetypes
+                                          parameters:
+                                            [...]
+                                          responses:
+                                            [...]
+                                    {% endfor %}
+                                </code>
+                            </pre>
+                        </textarea>
+                    </section>
+                    <section data-markdown>
+                        <textarea data-template>
+                            <pre>
+                                <code class="yaml">
+                                    /university/:
+                                        get:
+                                          summary: Retrieve the university schema.
+                                          description: Retrieves the schema for the the university limetype.
+                                          tags:
+                                            - Specific limetypes
+                                          parameters:
+                                            [...]
+                                          responses:
+                                            [...]
+                                </code>
+                            </pre>
+                        </textarea>
+                    </section>
+                </section>
+                <section>
+                    <section data-markdown>
+                        ### Demo time
+
+                        Note:
+                        - show docs for limetype API
+                    </section>
+                    <section>
+                        <img class="lime-image" src="images/lisa%20limetypes.png">
+                    </section>
+                    <section>
+                        <img class="lime-image" src="images/lisa%20student%20card.png">
+                    </section>
+                    <section>
+                        <img class="lime-image" src="images/get_university.png">
+                    </section>
+                    <section>
+                        <img class="lime-image" src="images/limeobject_universities.png">
+                    </section>
+                    <section>
+                        <img class="lime-image" src="images/limeobject_student_post.png">
+                    </section>
+                </section>
+                <section data-markdown>
+                    ### Thanks for your attention
+                    - Nordic Trainee Program: https://www.lime-technologies.se/trainee/
+                    - 1 year program with a mentor on your side
+                    - kickoff with 4 weeks of education in Lund
+                    - roles: developer, account manager, application consultant, technical project manager
+                    - starting in January and August
+                </section>
 			</div>
 		</div>
 
@@ -41,8 +237,11 @@
 					{ src: 'plugin/markdown/marked.js' },
 					{ src: 'plugin/markdown/markdown.js' },
 					{ src: 'plugin/notes/notes.js', async: true },
-					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
-				]
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+				],
+				markdown: {
+					smartypants: true
+				}
 			});
 		</script>
 	</body>
